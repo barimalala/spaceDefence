@@ -13,8 +13,16 @@ Abstract class Vessel {
 
     abstract function doOrder($order);
 
-    function move($coords){
+    public function move($coords){
         $this->coords = $coords;
+    }
+
+    public function getH(){
+        return $this->coords[0];
+    }
+
+    public function getW(){
+        return $this->coords[1];
     }
 
 }

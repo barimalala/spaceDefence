@@ -4,7 +4,7 @@ namespace model;
 
 Class Fleet {
     
-    protected $vessels = [];
+    public $vessels = [];
     protected $admiralIndex = 0;
 
     public function __construct(array $vessels) {

@@ -8,6 +8,7 @@ require_once('.\model\SupportVessel.php');
 
 class BattelfieldController{
 
+    
     public $areaHeight = 100;
     public $areaWeight = 100;
     public $Fleets = [];
@@ -40,15 +41,43 @@ class BattelfieldController{
     }
 
     public function getBattleArea(){
-        $initRange = \array_map(function(){
+        $area = \array_map(function(){
             return array_fill(0,$this->areaHeight,0);
         },array_fill(0,$this->areaHeight,0));
-        return $initRange;
+
+        foreach ($this->Fleets as $key => $fleet) {
+            foreach ($fleet->vessels as $key => $vessel) {
+                $area[$vessel->getH()][$vessel->getW()]=1;
+            }
+        }
+        return $area;
     }
 
-    public function setVesselOnMap($option = null){
+    public function setVesselOnMapRandom(){
 
+        $occupedRows = [];
+
+        foreach ($this->Fleets as $key => $fleet) {
+            foreach ($fleet->vessels as $key => &$vessel) {
+                if(count($occupedRows) >= $this->areaHeight * $this->areaWeight -1){
+                    throw new \Exception("There is no more place left !");
+                }
+                do {
+                    $havePlace = false;
+                    $h = \rand(0,$this->areaHeight);
+                    $w = \rand(0,$this->areaWeight);
+                    $search = 'H'.$h.'W'.$w;
+
+                    if(!in_array($search,$occupedRows)){
+                        $vessel->move([$h,$w]);
+                        $occupedRows[]=$search;
+                        $havePlace = true;
+                    }
+                } while (!$havePlace);
+            }
+        }
     }
+    
     
     public function generateOffensiveVessels($number = 50, $type = null){
         $vessels = [];
