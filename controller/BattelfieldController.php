@@ -3,6 +3,8 @@
 namespace controller;
 
 require_once('.\model\Fleet.php');
+require_once('.\model\OffensivesVessel.php');
+require_once('.\model\SupportVessel.php');
 
 class BattelfieldController{
 
@@ -18,7 +20,7 @@ class BattelfieldController{
         $this->areaWeight = $areaWeight;
     }
 
-    public function subscribeFleet(Fleet $Fleet){
+    public function subscribeFleet(\model\Fleet $Fleet){
 
         if(!count($Fleet->getVessels()))
             throw new \Exception('you can\'t subscribe an empty fleet');
@@ -42,5 +44,22 @@ class BattelfieldController{
             return array_fill(0,$this->areaHeight,0);
         },array_fill(0,$this->areaHeight,0));
         return $initRange;
+    }
+
+    public function setVesselOnMap($option = null){
+
+    }
+    
+    public function generateOffensiveVessels($number = 50, $type = null){
+        $vessels = [];
+        for ($i=0; $i < 50; $i++) { 
+            $vessels[] = new \model\OffensivesVessel();
+        }
+        return $vessels;
+    }
+
+    public function createFleet(array $vessels){
+        $Fleet = new \model\Fleet($vessels);
+        $this->subscribeFleet($Fleet); 
     }
 }
