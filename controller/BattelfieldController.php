@@ -45,9 +45,9 @@ class BattelfieldController{
             return array_fill(0,$this->areaHeight,0);
         },array_fill(0,$this->areaHeight,0));
 
-        foreach ($this->Fleets as $key => $fleet) {
+        foreach ($this->Fleets as $fKey => $fleet) {
             foreach ($fleet->vessels as $key => $vessel) {
-                $area[$vessel->getH()][$vessel->getW()]= $vessel instanceof \model\OffensivesVessel ? 1 : 2;
+                $area[$vessel->getH()][$vessel->getW()]=$fKey*2+ ($vessel instanceof \model\OffensivesVessel ? 1 : 2);
             }
         }
         return $area;
@@ -94,19 +94,27 @@ class BattelfieldController{
                         $h = \rand(0,$this->areaHeight);
                         $w = \rand(0,$this->areaWeight);
                         $search = 'H'.$h.'W'.$w;
+
+                        if(count($supportVessels)>$currentSupportPlacedIndex){
+                            if(!in_array($search,$occupedRows) && $adj = $this->findAdjacentFreeCase($h,$w,$occupedRows)){
+                                $vessel->move([$h,$w]);
+                                $occupedRows[]=$search;
     
-                        if(!in_array($search,$occupedRows) && $adj = $this->findAdjacentFreeCase($h,$w,$occupedRows)){
-                            $vessel->move([$h,$w]);
-                            $occupedRows[]=$search;
-
-                            $randAdjacentIndex = array_rand($adj);
-                            $sH = $adj[$randAdjacentIndex][0];
-                            $sW = $adj[$randAdjacentIndex][1];
-                            $supportVessels[$currentSupportPlacedIndex]->move([$sH,$sW]);
-                            $occupedRows[]='H'.$sH.'W'.$sW;
-
-                            $havePlace = true;
-                            $currentSupportPlacedIndex++;
+                                $randAdjacentIndex = array_rand($adj);
+                                $sH = $adj[$randAdjacentIndex][0];
+                                $sW = $adj[$randAdjacentIndex][1];
+                                $supportVessels[$currentSupportPlacedIndex]->move([$sH,$sW]);
+                                $occupedRows[]='H'.$sH.'W'.$sW;
+    
+                                $havePlace = true;
+                                $currentSupportPlacedIndex++;
+                            }
+                        }else{
+                            if(!in_array($search,$occupedRows)){
+                                $vessel->move([$h,$w]);
+                                $occupedRows[]='H'.$h.'W'.$w;
+                                $havePlace = true;
+                            }
                         }
                     } while (!$havePlace);
                 }

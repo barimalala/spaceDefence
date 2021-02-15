@@ -2,6 +2,9 @@
 
 namespace model;
 
+/**
+* @param vessels: on fleet is defined by a vessels with on Admiral (the first vessel by default)
+*/
 Class Fleet {
     
     public $vessels = [];
@@ -16,11 +19,14 @@ Class Fleet {
         $this->vessels = $vessels;
     }
 
+    /**
+    *
+    */
     public function setAsAdmiral(int $vesselIndex = 0){
         $this->admiralIndex = $vesselIndex;
     }
 
-    public function getVessels(){
+    public function getVessels() : array{
         return $this->vessels;
     }
 }

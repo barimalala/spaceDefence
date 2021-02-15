@@ -2,6 +2,9 @@
 
 namespace model;
 
+/**
+* @param coords : define the position of vesset on the map
+*/
 Abstract class Vessel {
 
     private $order;
@@ -17,11 +20,11 @@ Abstract class Vessel {
         $this->coords = $coords;
     }
 
-    public function getH(){
+    public function getH(): int{
         return $this->coords[0];
     }
 
-    public function getW(){
+    public function getW(): int{
         return $this->coords[1];
     }
 
